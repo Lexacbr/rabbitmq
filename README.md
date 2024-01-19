@@ -216,7 +216,15 @@ sudo nano /var/lib/rabbitmq/.erlang.cookie
 на своем первом узле на все остальные узлы в кластере.
 - поменял настройки в файле `/etc/hosts`
 ![etc-hosts](scrsh/etc-hosts.png)
-
+- проверил, что обе ВМ пингуются в обе стороны по DNS
+```bash
+$ ping abc
+```
+![ping-to-abc](/scrsh/ping-to-abc.png)
+```bash 
+ping abc-virtualbox
+```
+![ping-to-vbox](scrsh/ping-to-vbox.png)
 2. Сброс RabbitMQ на второй машине:
 - Перезапускаю сервис RabbitMQ.
 ```bash
