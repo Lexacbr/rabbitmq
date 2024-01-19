@@ -31,7 +31,7 @@ curl -1sLf https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/gpg.E495BB49
 curl -1sLf https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/gpg.9F4587F226208342.key | sudo gpg --dearmor | sudo tee /usr/share/keyrings/io.cloudsmith.rabbitmq.9F4587F226208342.gpg > /dev/null
 ```
 ---
-2. Добавление репозиториев:
+3. Добавление репозиториев:
 - Для работы с репозиториями необходимо установить пакет apt-transport-https:
 ```bash
 sudo apt install apt-transport-https
@@ -55,7 +55,7 @@ deb-src [signed-by=/usr/share/keyrings/io.cloudsmith.rabbitmq.9F4587F226208342.g
 sudo apt update -y
 ```
 ---
-3. Установка erlang:
+4. Установка erlang:
 - Для установки всех необходимых пакетов erlang выполнил:
 ```bash
 sudo apt install -y erlang-base \
