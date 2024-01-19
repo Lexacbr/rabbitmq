@@ -293,5 +293,5 @@ $ rabbitmqctl cluster_status
 $ sudo rabbitmqctl list_users
 ```
 ![list-users](scrsh/list-users.png)
-------
+### Вот и всё )))---
 
