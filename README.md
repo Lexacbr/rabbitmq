@@ -55,7 +55,9 @@ deb-src [signed-by=/usr/share/keyrings/io.cloudsmith.rabbitmq.9F4587F226208342.g
 sudo apt update -y
 ```
 ---
+
 4. Установка erlang:
+
 - Для установки всех необходимых пакетов erlang выполнил:
 ```bash
 sudo apt install -y erlang-base \
@@ -76,6 +78,7 @@ erl
 sudo systemctl status rabbitmq-server
 ```
 ---
+
 5. Веб интерфейс:
 - Мне нужен доступ к веб-интерфейсу RabbitMQ и его необходимо включить. Для этого выполнил:
 ```bash
@@ -94,6 +97,7 @@ sudo rabbitmqctl set_user_tags admin administrator
 sudo rabbitmqctl set_permissions -p / admin ".*" ".*" ".*"
 ```
 ---
+
 - После завершения настройки авторизуюсь в веб-интерфейсе программы от имени только что созданного пользователя:
 ![overview_abc](scrsh/abc-owerview.png)
 ![abc_queue](scrsh/abc-queue.png)
@@ -124,6 +128,7 @@ $ pip install pika
 pip install pika
 ```
 ---
+
 - Модифицировал немного скрипты `producer`... 
 ```py
 #!/usr/bin/env python
@@ -148,7 +153,9 @@ if __name__ == '__main__':
             )
         count += 1
 ```
+
 ---
+
 - ...`consumer`
 ```py
 #!/usr/bin/env python
@@ -216,6 +223,7 @@ $ rabbitmqadmin get queue='hello'
 ---
 ### Ответ 3.
 ---
+
 1. Установил ещё одну Вм, установил на неё `rabbitmq` `erlang` `python3` `pika`. Всё то что устанавливал и на первую ВМ.Опираясь на [статью](https://itisgood.ru/2018/12/11/kak-nastroit-klaster-rabbitmq-v-ubuntu-18-04-lts/) я произвёл следующие настройки:
 - Для работы кластера RabbitMQ все узлы, участвующие в кластере, должны иметь одинаковые файлы cookie. Скопируйте по пути 
 ``` bash 
@@ -229,13 +237,16 @@ sudo nano /var/lib/rabbitmq/.erlang.cookie
 ```bash
 $ ping abc
 ```
+
 ![ping-to-abc](/scrsh/ping-to-abc.png)
 ---
+
 ```bash 
 ping abc-virtualbox
 ```
 ![ping-to-vbox](scrsh/ping-to-vbox.png)
 ---
+
 2. Сброс RabbitMQ на второй машине:
 - Перезапускаю сервис RabbitMQ.
 ```bash
@@ -270,39 +281,49 @@ $ sudo rabbitmqctl set_policy ha-all ".*" '{"ha-mode":"all"}'
 - создание второй ВМ.
 ![abc-virtualbox-overview](scrsh/abc-virtualbox-overview.png)
 ---
+
 - создание кластера:
 ![create-cluster](scrsh/connections.png)
 ---
+
 - подключения:
 ![connections](https://github.com/Lexacbr/rabbitmq/blob/main/scrsh/connections.png)
 ---
+
 - кластер с выклеченым publisher. Из очереди только читается информация.
 ![cluster-1publisher](scrsh/cluster-1publisher.png)
 ---
+
 - результат одновременной работы и publisher и consumer
 ![pub&cons](scrsh/pub&cons.png)
 ---
+
 ![publish&consumer](scrsh/publish&consumer.png)
 ---
+
 - результат команды:
 ```shell script
 $ rabbitmqadmin get queue='hello'
 ```
 ![get_queue](scrsh/get_queue.png)
 ---
+
 - результат команды:
 ```shell script
 $ rabbitmqctl cluster_status
 ```
 ![cluster-status](scrsh/cluster-status.png)
 ---
+
 - проверка через терминал:
 ```bash
 $ sudo rabbitmqctl list_users
 ```
+
 ![list-users](scrsh/list-users.png)
 ---
 
 ### Вот и всё )))
+
 ---
 
