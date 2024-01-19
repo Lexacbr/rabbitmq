@@ -225,6 +225,7 @@ $ ping abc
 ping abc-virtualbox
 ```
 ![ping-to-vbox](scrsh/ping-to-vbox.png)
+---
 2. Сброс RabbitMQ на второй машине:
 - Перезапускаю сервис RabbitMQ.
 ```bash
