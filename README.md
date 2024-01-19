@@ -1,20 +1,5 @@
 # Домашнее задание к занятию  «Очереди RabbitMQ» - Савельев Алексей SYS-25
 
-### Инструкция по выполнению домашнего задания
-
-1. Сделайте fork [репозитория c шаблоном решения](https://github.com/netology-code/sys-pattern-homework) к себе в Github и переименуйте его по названию или номеру занятия, например, https://github.com/имя-вашего-репозитория/gitlab-hw или https://github.com/имя-вашего-репозитория/8-03-hw).
-2. Выполните клонирование этого репозитория к себе на ПК с помощью команды `git clone`.
-3. Выполните домашнее задание и заполните у себя локально этот файл README.md:
-   - впишите вверху название занятия и ваши фамилию и имя;
-   - в каждом задании добавьте решение в требуемом виде: текст/код/скриншоты/ссылка;
-   - для корректного добавления скриншотов воспользуйтесь инструкцией [«Как вставить скриншот в шаблон с решением»](https://github.com/netology-code/sys-pattern-homework/blob/main/screen-instruction.md);
-   - при оформлении используйте возможности языка разметки md. Коротко об этом можно посмотреть в [инструкции по MarkDown](https://github.com/netology-code/sys-pattern-homework/blob/main/md-instruction.md).
-4. После завершения работы над домашним заданием сделайте коммит (`git commit -m "comment"`) и отправьте его на Github (`git push origin`).
-5. Для проверки домашнего задания преподавателем в личном кабинете прикрепите и отправьте ссылку на решение в виде md-файла в вашем Github.
-6. Любые вопросы задавайте в чате учебной группы и/или в разделе «Вопросы по заданию» в личном кабинете.
-
-Желаем успехов в выполнении домашнего задания.
-
 ---
 
 ### Задание 1. Установка RabbitMQ
@@ -127,6 +112,39 @@ $ pip install pika
 ---
 ### Ответ 2.
 ---
+- Для установки `python3` на ВМ я пользовался подсказками из [этой статьи](https://www.digitalocean.com/community/tutorials/how-to-install-python-3-and-set-up-a-programming-environment-on-an-ubuntu-20-04-server-ru)
+- Так же установил библиотеку `pika` предложеным способом:
+```bash 
+pip install pika
+```
+- Модифицировал немного скрипты `producer` `consumer`
+```pyhton3 
+#!/usr/bin/env python
+# coding=utf-8
+import pika
+
+parameters = pika.URLParameters('amqp://admin:adminpass@localhost:5672/')
+connection = pika.BlockingConnection(parameters)
+channel = connection.channel()
+
+channel.queue_declare(queue='hello')
+
+if __name__ == '__main__':
+    
+    count = 0
+
+    while True:
+        channel.basic_publish(
+            exchange='', 
+            routing_key='hello', 
+            body=f'Hello, People! - {count}',
+            )
+        count += 1
+```
+- и запустил из той же папки где они лежали:
+```bash
+python3 producer1.py
+```
 
 ### Задание 3. Подготовка HA кластера
 
@@ -166,13 +184,4 @@ $ rabbitmqadmin get queue='hello'
 ---
 
 
-## Дополнительные задания (со звёздочкой*)
-Эти задания дополнительные, то есть не обязательные к выполнению, и никак не повлияют на получение вами зачёта по этому домашнему заданию. Вы можете их выполнить, если хотите глубже шире разобраться в материале.
-
-### * Задание 4. Ansible playbook
-
-Напишите плейбук, который будет производить установку RabbitMQ на любое количество нод и объединять их в кластер.
-При этом будет автоматически создавать политику ha-all.
-
-*Готовый плейбук разместите в своём репозитории.*
 
