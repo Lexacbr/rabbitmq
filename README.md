@@ -27,9 +27,10 @@
 ---
 ### Ответ 1.
 
-
+- При решение данной задачи я использовал [материал](https://losst.pro/ustanovka-rabbitmq-v-ubuntu-20-04) со стороннего сайта. На данном сайте инструкция для установки на `Ubuntu 20.04` но у меня установлена версия 22.04 и в некоторых пунктах пришлось применить некоторые изменения. Дальше идёт инструкция для установки на `Ubuntu 22.04` с внесёнными мной изменениями.
 ---
 ### Что я делал:Установка RabbitMQ в Ubuntu 22.04
+
 1. Добавление ключей в систему:
 ```bash
 sudo apt install curl gnupg -y
@@ -102,7 +103,7 @@ sudo rabbitmqctl set_user_tags admin administrator
 sudo rabbitmqctl set_permissions -p / admin ".*" ".*" ".*"
 ```
 - После завершения настройки авторизуюсь в веб-интерфейсе программы от имени только что созданного пользователя:
-![overview_abc]()
+![overview_abc](https://github.com/Lexacbr/rabbitmq/blob/main/scrsh/abc-owerview.png)
 
 ### Задание 2. Отправка и получение сообщений
 
