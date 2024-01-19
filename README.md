@@ -72,14 +72,20 @@ erlang-syntax-tools erlang-tftp erlang-tools erlang-xmerl
 erl
 ```
 - Для того чтобы выйти из консоли нажал Ctrl+C.
----
+
+5. Установка RabbitMQ:
+
+```bash
+sudo apt-get install rabbitmq-server -y --fix-missing
+```
+
 - Затем проверил что сервер запущен и работает:
 ```bash
 sudo systemctl status rabbitmq-server
 ```
 ---
 
-5. Веб интерфейс:
+6. Веб интерфейс:
 - Мне нужен доступ к веб-интерфейсу RabbitMQ и его необходимо включить. Для этого выполнил:
 ```bash
 sudo rabbitmq-plugins enable rabbitmq_management
