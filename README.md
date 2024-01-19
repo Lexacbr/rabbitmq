@@ -214,6 +214,8 @@ $ rabbitmqadmin get queue='hello'
 sudo nano /var/lib/rabbitmq/.erlang.cookie
 ```
 на своем первом узле на все остальные узлы в кластере.
+- поменял настройки в файле `/etc/hosts`
+[etc-hosts](scrsh/etc-hosts.png)
 
 2. Сброс RabbitMQ на второй машине:
 - Перезапускаю сервис RabbitMQ.
