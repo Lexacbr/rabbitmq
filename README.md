@@ -118,7 +118,7 @@ $ pip install pika
 pip install pika
 ```
 - Модифицировал немного скрипты `producer` `consumer`
-```pyhton3 
+```py
 #!/usr/bin/env python
 # coding=utf-8
 import pika
