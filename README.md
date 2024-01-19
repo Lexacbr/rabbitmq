@@ -30,6 +30,7 @@ curl -1sLf https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/gpg.E495BB49
 ```bash
 curl -1sLf https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/gpg.9F4587F226208342.key | sudo gpg --dearmor | sudo tee /usr/share/keyrings/io.cloudsmith.rabbitmq.9F4587F226208342.gpg > /dev/null
 ```
+---
 2. Добавление репозиториев:
 - Для работы с репозиториями необходимо установить пакет apt-transport-https:
 ```bash
@@ -43,6 +44,7 @@ sudo nano /etc/apt/sources.list.d/rabbitmq.list
 deb [signed-by=/usr/share/keyrings/io.cloudsmith.rabbitmq.E495BB49CC4BBE5B.gpg] https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/deb/ubuntu jummy main
 deb-src [signed-by=/usr/share/keyrings/io.cloudsmith.rabbitmq.E495BB49CC4BBE5B.gpg] https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/deb/ubuntu jummy main
 ```
+---
 - Затем репозитории RabbitMQ:
 ```bash
 deb [signed-by=/usr/share/keyrings/io.cloudsmith.rabbitmq.9F4587F226208342.gpg] https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/deb/ubuntu jummy main
@@ -52,6 +54,7 @@ deb-src [signed-by=/usr/share/keyrings/io.cloudsmith.rabbitmq.9F4587F226208342.g
 ```bash
 sudo apt update -y
 ```
+---
 3. Установка erlang:
 - Для установки всех необходимых пакетов erlang выполнил:
 ```bash
@@ -61,15 +64,18 @@ erlang-mnesia erlang-os-mon erlang-parsetools erlang-public-key \
 erlang-runtime-tools erlang-snmp erlang-ssl \
 erlang-syntax-tools erlang-tftp erlang-tools erlang-xmerl
 ```
+---
 - После установки можно убедится что всё прошло успешно выполнив:
 ```bash
 erl
 ```
 - Для того чтобы выйти из консоли нажал Ctrl+C.
+---
 - Затем проверил что сервер запущен и работает:
 ```bash
 sudo systemctl status rabbitmq-server
 ```
+---
 5. Веб интерфейс:
 - Мне нужен доступ к веб-интерфейсу RabbitMQ и его необходимо включить. Для этого выполнил:
 ```bash
@@ -87,22 +93,20 @@ sudo rabbitmqctl set_user_tags admin administrator
 ```bash
 sudo rabbitmqctl set_permissions -p / admin ".*" ".*" ".*"
 ```
+---
 - После завершения настройки авторизуюсь в веб-интерфейсе программы от имени только что созданного пользователя:
-![overview_abc](https://github.com/Lexacbr/rabbitmq/blob/main/scrsh/abc-owerview.png)
-![abc_queue](https://github.com/Lexacbr/rabbitmq/blob/main/scrsh/abc-queue.png)
+![overview_abc](scrsh/abc-owerview.png)
+![abc_queue](scrsh/abc-queue.png)
 ---
 ### Задание 2. Отправка и получение сообщений
 
 Используя приложенные скрипты, проведите тестовую отправку и получение сообщения.
 Для отправки сообщений необходимо запустить скрипт producer.py.
-
 Для работы скриптов вам необходимо установить Python версии 3 и библиотеку Pika.
 Также в скриптах нужно указать IP-адрес машины, на которой запущен RabbitMQ, заменив localhost на нужный IP.
-
 ```shell script
 $ pip install pika
 ```
-
 Зайдите в веб-интерфейс, найдите очередь под названием hello и сделайте скриншот.
 После чего запустите второй скрипт consumer.py и сделайте скриншот результата выполнения скрипта
 
@@ -118,6 +122,7 @@ $ pip install pika
 ```bash 
 pip install pika
 ```
+---
 - Модифицировал немного скрипты `producer`... 
 ```py
 #!/usr/bin/env python
@@ -142,6 +147,7 @@ if __name__ == '__main__':
             )
         count += 1
 ```
+---
 - ...`consumer`
 ```py
 #!/usr/bin/env python
@@ -176,7 +182,8 @@ $ python3 producer1.py
 $ python3 consumer1.py
 ```
 - вот результат работы:
-![abc_publish&consumer](https://github.com/Lexacbr/rabbitmq/blob/main/scrsh/abc-publish%26consumer.png)
+![abc_publish&consumer](scrsh/abc-publish&consumer.png)
+---
 
 ### Задание 3. Подготовка HA кластера
 
@@ -260,27 +267,27 @@ $ sudo rabbitmqctl set_policy ha-all ".*" '{"ha-mode":"all"}'
 ```
 - и вот результаты работы кластера:
 - создание второй ВМ.
-![abc-virtualbox-overview](https://github.com/Lexacbr/rabbitmq/blob/main/scrsh/abc-virtualbox-overview.png)
+![abc-virtualbox-overview](scrsh/abc-virtualbox-overview.png)
 ---
 - создание кластера:
-![create-cluster](https://github.com/Lexacbr/rabbitmq/blob/main/scrsh/create-cluster.png)
+![create-cluster](scrsh/connections.png)
 ---
 - подключения:
 ![connections](https://github.com/Lexacbr/rabbitmq/blob/main/scrsh/connections.png)
 ---
 - кластер с выклеченым publisher. Из очереди только читается информация.
-![cluster-1publisher](https://github.com/Lexacbr/rabbitmq/blob/main/scrsh/cluster-1publisher.png)
+![cluster-1publisher](scrsh/cluster-1publisher.png)
 ---
 - результат одновременной работы и publisher и consumer
-![pub&cons](https://github.com/Lexacbr/rabbitmq/blob/main/scrsh/pub%26cons.png)
+![pub&cons](scrsh/pub&cons.png)
 ---
-![publish&consumer](https://github.com/Lexacbr/rabbitmq/blob/main/scrsh/publish%26consumer.png)
+![publish&consumer](scrsh/publish&consumer.png)
 ---
 - результат команды:
 ```shell script
 $ rabbitmqadmin get queue='hello'
 ```
-![get_queue](https://github.com/Lexacbr/rabbitmq/blob/main/scrsh/get_queue.png)
+![get_queue](scrsh/get_queue.png)
 ---
 - результат команды:
 ```shell script
