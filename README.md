@@ -98,6 +98,7 @@ sudo rabbitmqctl set_permissions -p / admin ".*" ".*" ".*"
 ![overview_abc](scrsh/abc-owerview.png)
 ![abc_queue](scrsh/abc-queue.png)
 ---
+
 ### Задание 2. Отправка и получение сообщений
 
 Используя приложенные скрипты, проведите тестовую отправку и получение сообщения.
