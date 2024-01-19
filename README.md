@@ -255,18 +255,18 @@ $ sudo rabbitmqctl set_policy ha-all ".*" '{"ha-mode":"all"}'
 - кластер с выклеченым publisher. Из очереди только читается информация.
 ![cluster-1publisher](https://github.com/Lexacbr/rabbitmq/blob/main/scrsh/cluster-1publisher.png)
 - результат одновременной работы и publisher и consumer
-![pub&cons]()
-![publish&consumer]()
+![pub&cons](https://github.com/Lexacbr/rabbitmq/blob/main/scrsh/pub%26cons.png)
+![publish&consumer](https://github.com/Lexacbr/rabbitmq/blob/main/scrsh/publish%26consumer.png)
 - результат команды:
 ```shell script
 $ rabbitmqadmin get queue='hello'
 ```
-![get_queue]()
+![get_queue](https://github.com/Lexacbr/rabbitmq/blob/main/scrsh/get_queue.png)
 - результат команды:
 ```shell script
 $ rabbitmqctl cluster_status
 ```
-![cluster-status]()
+![cluster-status](scrsh/cluster-status.png)
 - проверка через терминал:
 ```bash
 $ sudo rabbitmqctl list_users
