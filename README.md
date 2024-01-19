@@ -89,7 +89,8 @@ sudo rabbitmqctl set_permissions -p / admin ".*" ".*" ".*"
 ```
 - После завершения настройки авторизуюсь в веб-интерфейсе программы от имени только что созданного пользователя:
 ![overview_abc](https://github.com/Lexacbr/rabbitmq/blob/main/scrsh/abc-owerview.png)
-
+![abc_queue](https://github.com/Lexacbr/rabbitmq/blob/main/scrsh/abc-queue.png)
+---
 ### Задание 2. Отправка и получение сообщений
 
 Используя приложенные скрипты, проведите тестовую отправку и получение сообщения.
@@ -117,7 +118,7 @@ $ pip install pika
 ```bash 
 pip install pika
 ```
-- Модифицировал немного скрипты `producer` `consumer`
+- Модифицировал немного скрипты `producer`... 
 ```py
 #!/usr/bin/env python
 # coding=utf-8
@@ -141,10 +142,41 @@ if __name__ == '__main__':
             )
         count += 1
 ```
-- и запустил из той же папки где они лежали:
-```bash
-python3 producer1.py
+- ...`consumer`
+```py
+#!/usr/bin/env python
+# coding=utf-8
+import pika
+
+parameters = pika.URLParameters('amqp://admin:adminpass@localhost:5672/')
+connection = pika.BlockingConnection(parameters)
+channel = connection.channel()
+
+channel.queue_declare(queue='hello')
+
+def callback(ch, method, properties, body) -> None:
+    #print( ch, method, properties, body)
+    print(body)
+    
+channel.basic_consume(
+    queue='hello', 
+    on_message_callback=callback,
+    auto_ack=True,
+    consumer_tag='netology_consumer',
+    )
+
+if __name__ == '__main__':
+    channel.start_consuming() 
 ```
+- и запустил из той же папки где они находились на ВМ:
+```bash
+$ python3 producer1.py
+```
+```bash
+$ python3 consumer1.py
+```
+- вот результат работы:
+![abc_publish&consumer](https://github.com/Lexacbr/rabbitmq/blob/main/scrsh/abc-publish%26consumer.png)
 
 ### Задание 3. Подготовка HA кластера
 
@@ -158,30 +190,86 @@ $ cat /etc/hosts
 192.168.0.11 rmq02
 ```
 После этого ваши машины могут пинговаться по имени.
-
 Затем объедините две машины в кластер и создайте политику ha-all на все очереди.
-
 *В качестве решения домашнего задания приложите скриншоты из веб-интерфейса с информацией о доступных нодах в кластере и включённой политикой.*
-
 Также приложите вывод команды с двух нод:
 
 ```shell script
 $ rabbitmqctl cluster_status
 ```
-
 Для закрепления материала снова запустите скрипт producer.py и приложите скриншот выполнения команды на каждой из нод:
 
 ```shell script
 $ rabbitmqadmin get queue='hello'
 ```
-
 После чего попробуйте отключить одну из нод, желательно ту, к которой подключались из скрипта, затем поправьте параметры подключения в скрипте consumer.py на вторую ноду и запустите его.
-
 *Приложите скриншот результата работы второго скрипта.*
 
 ---
 ### Ответ 3.
 ---
+1. Установил ещё одну Вм, установил на неё `rabbitmq` `erlang` `python3` `pika`. Всё то что устанавливал и на первую ВМ.Опираясь на [статью](https://itisgood.ru/2018/12/11/kak-nastroit-klaster-rabbitmq-v-ubuntu-18-04-lts/) я произвёл следующие настройки:
+- Для работы кластера RabbitMQ все узлы, участвующие в кластере, должны иметь одинаковые файлы cookie. Скопируйте по пути 
+``` bash 
+sudo nano /var/lib/rabbitmq/.erlang.cookie
+```
+на своем первом узле на все остальные узлы в кластере.
 
+2. Сброс RabbitMQ на второй машине:
+- Перезапускаю сервис RabbitMQ.
+```bash
+$ sudo systemctl restart rabbitmq-server
+```
+- Останавливаю приложение:
+```bash
+$ sudo rabbitmqctl stop_app
+```
+- Сбрасываю rabbitmq:
+```bash
+$ sudo rabbitmqctl reset
+```
+- Присоединяю узел к кластеру:
+```bash
+$ sudo rabbitmqctl join_cluster rabbit@имя_перовой_ВМ_в_кластере
+```
+- Запускаю процесс подачи приложения:
+```bash
+$ sudo rabbitmqctl start_app
+```
+- Проверьте статус кластера:
+```bash
+$ root@первая_ВМ_в_кластере:~# rabbitmqctl cluster_status
+```
+3. Настраиваю политики RabbitMQ HA:
+- Создайте политику, которая позволяет зеркалировать очереди для всех узлов в кластере:
+```bash
+$ sudo rabbitmqctl set_policy ha-all ".*" '{"ha-mode":"all"}'
+```
+- и вот результаты работы кластера:
+- создание второй ВМ.
+![abc-virtualbox-overview](https://github.com/Lexacbr/rabbitmq/blob/main/scrsh/abc-virtualbox-overview.png)
+- создание кластера:
+![create-cluster](https://github.com/Lexacbr/rabbitmq/blob/main/scrsh/create-cluster.png)
+- подключения:
+![connections](https://github.com/Lexacbr/rabbitmq/blob/main/scrsh/connections.png)
+- кластер с выклеченым publisher. Из очереди только читается информация.
+![cluster-1publisher](https://github.com/Lexacbr/rabbitmq/blob/main/scrsh/cluster-1publisher.png)
+- результат одновременной работы и publisher и consumer
+![pub&cons]()
+![publish&consumer]()
+- результат команды:
+```shell script
+$ rabbitmqadmin get queue='hello'
+```
+![get_queue]()
+- результат команды:
+```shell script
+$ rabbitmqctl cluster_status
+```
+![cluster-status]()
+- проверка через терминал:
+```bash
+$ sudo rabbitmqctl list_users
+```
 
 
